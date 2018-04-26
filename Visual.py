@@ -83,9 +83,9 @@ class Visualizer:
                 elif self.matrix[i][j] == 'B':
                     image = 'bomb.png'
                 elif self.matrix[i][j] == "+":
-                    image = 'unbreakwall.png'
+                    image = 'explosionUp.png'
                 elif self.matrix[i][j] == "O":
-                    image = 'unbreakwall.png'
+                    image = 'bombUp.png'
                 elif self.matrix[i][j] == "P1,B" or self.matrix[i][j] == 'P1':
                     image = 'player1.PNG'
                 elif self.matrix[i][j] == "P2,B" or self.matrix[i][j] == 'P2':
