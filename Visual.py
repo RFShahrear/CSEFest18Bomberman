@@ -94,6 +94,7 @@ class Visualizer:
                     image = 'player3.PNG'
                 elif self.matrix[i][j] == "P4,B" or self.matrix[i][j] == 'P4':
                     image = 'player4.PNG'
+
                 self.gameDisplay.blit(self.get_image(image),
                                       (j * self.blockSize, i * self.blockSize, self.blockSize, self.blockSize))
         pygame.draw.rect(self.gameDisplay, self.black,

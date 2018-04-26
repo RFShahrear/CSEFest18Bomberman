@@ -29,7 +29,7 @@ class MapData:
             line = file.readline()
             for j in range(0, size[1]):
                 if self.__coordinate_data[i][j] == "W":
-                    self.__coordinate_data[i][j] += "," + line[j]
+                    self.__coordinate_data[i][j] += " ," + line[j]
 
     def add_player(self, player):
         if len(self.__player_data) == 0:
@@ -69,7 +69,7 @@ class MapData:
             self.__tick()
 
     def get_full_map(self):
-        return [list(data) for data in self.__coordinate_data]
+        return [list(value[0:2].rstrip() for value in data) for data in self.__coordinate_data]
 
     # def get_proximity_map(self, player, radius):
     #     position = self.player_data[player]["coordinate"]
