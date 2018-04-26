@@ -95,13 +95,18 @@ class Visualizer:
                 self.gameDisplay.blit(self.get_image(image),
                                       (j * self.blockSize, i * self.blockSize, self.blockSize, self.blockSize))
         pygame.draw.rect(self.gameDisplay, self.black,
-                         (len(self.matrix[0]) * self.blockSize, 0, 300, len(self.matrix) * self.blockSize));
+                         (len(self.matrix[0]) * self.blockSize, 0, 300, len(self.matrix) * self.blockSize))
 
         for i in range(len(player)):
             imagename = 'player' + str(i + 1) + 'Large.png'
             self.gameDisplay.blit(self.get_image(imagename), (len(self.matrix[0]) * self.blockSize, i*112))
-            name = 'Player ' + str(i+1)
+            player = self.map_data.get_player_data(i + 1)
+            name = player["name"]
+            bomb_size = "Bomb Size " + str(player["bomb_size"])
+            bomb_count = "Bomb Count" + str(player["bomb_count"])
             self.message_to_screen(name, self.white, len(self.matrix[0]) * self.blockSize + 114, i*112 + 5)
+            self.message_to_screen(bomb_size, self.white, len(self.matrix[0]) * self.blockSize + 114, i * 112 + 30)
+            self.message_to_screen(bomb_count, self.white, len(self.matrix[0]) * self.blockSize + 114, i * 112 + 55)
 
         pygame.display.update()
 
@@ -161,7 +166,7 @@ class Visualizer:
                         image = 'player1.PNG'
 
                     self.gameDisplay.blit(self.get_image(image), (j * self.blockSize, i * self.blockSize, self.blockSize, self.blockSize))
-            pygame.draw.rect(self.gameDisplay, self.black, (len(self.matrix[0]) * self.blockSize, 0, 300, len(self.matrix) * self.blockSize));
+            pygame.draw.rect(self.gameDisplay, self.black, (len(self.matrix[0]) * self.blockSize, 0, 300, len(self.matrix) * self.blockSize))
             pygame.display.update()
 
         pygame.quit()
