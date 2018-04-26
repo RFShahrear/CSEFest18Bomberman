@@ -1,29 +1,31 @@
 Map Description:
 
-I : Indestructible Wall
-W : Destructible Wall
-B : Bomb (WIP)
-P : Player
-+ : Increase Bomb Size (NYI)
-O : Increase Bomb Count (NYI)
-. : Empty Space
+I 		: Indestructible Wall
+W		: Destructible Wall
+B 		: Bomb (WIP)
+P1, P2, P3, P4 	: Player
++ 		: Increase Bomb Size
+O 		: Increase Bomb Count
+. 		: Empty Space
 
 
 Classes:
 
 Visualizer : Pygame handler, not the contestant's concern
+
 MapData : Contains game information
-	 (Functions starting with __ is private and not callable)
-	 schedule_bomb				-> Place a bomb on current position (WIP)
+	 (Functions starting with __ is private and not normally callable)
+	 schedule_bomb				-> Place a bomb on current position
 	 schedule_move (Direction: N/S/E/W) 	-> move to given direction
 	 skip_turn				-> Do nothing in current turn
-	 get_full_map 				-> Do you really need a written explanation?
-	 get_player_data 			-> Take a wild guess 
+	 get_full_map 				-> Provides the current map
+	 get_player_data (Index: 1,2,3,4)	-> provides information
 
  	 Player Data : A Dictionary Containing
 		"coordinate"	-> Position
 		"bomb_size"	-> Explosion Radius
-		"bomb_count" 	-> Number of Bombs that can be deployed at once (WIP)
+		"bomb_count" 	-> Number of Bombs that can be deployed at a time
+		"index"		-> Player Index
 	
 Player : Written by contestants, a sample is given.
 
