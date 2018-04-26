@@ -76,12 +76,16 @@ class Visualizer:
                 image = None
                 if self.matrix[i][j] == 'I':
                     image = 'unbreakwall.png'
-                elif self.matrix[i][j] == 'W':
+                elif self.matrix[i][j][0] == 'W':
                     image = 'breakwall.png'
                 elif self.matrix[i][j] == '.':
                     image = 'path.png'
                 elif self.matrix[i][j] == 'B':
                     image = 'bomb.png'
+                elif self.matrix[i][j] == "+":
+                    image = 'unbreakwall.png'
+                elif self.matrix[i][j] == "O":
+                    image = 'unbreakwall.png'
                 elif self.matrix[i][j] == "P1,B" or self.matrix[i][j] == 'P1':
                     image = 'player1.PNG'
                 elif self.matrix[i][j] == "P2,B" or self.matrix[i][j] == 'P2':
@@ -90,8 +94,6 @@ class Visualizer:
                     image = 'player3.PNG'
                 elif self.matrix[i][j] == "P4,B" or self.matrix[i][j] == 'P4':
                     image = 'player4.PNG'
-
-
                 self.gameDisplay.blit(self.get_image(image),
                                       (j * self.blockSize, i * self.blockSize, self.blockSize, self.blockSize))
         pygame.draw.rect(self.gameDisplay, self.black,

@@ -14,6 +14,8 @@ class MapData:
         self.__coordinate_data = []
         self.__bomb_data = []
         self.__to_be_placed = []
+        self.__power_placement_expand = []
+        self.__power_placement_increase = []
         for i in range(0, size[0]):
             line = file.readline()
             line_data = []
@@ -21,18 +23,26 @@ class MapData:
                 line_data.append(line[j])
             self.__coordinate_data.append(line_data)
 
+        file.readline()
+
+        for i in range(0, size[0]):
+            line = file.readline()
+            for j in range(0, size[1]):
+                if self.__coordinate_data[i][j] == "W":
+                    self.__coordinate_data[i][j] += "," + line[j]
+
     def add_player(self, player):
         if len(self.__player_data) == 0:
-            self.__player_data[player] = {"coordinate": (1, 1), "bomb_size": 1, "turn": True, "bomb_count": 1, "Index": 1}
+            self.__player_data[player] = {"coordinate": (1, 1), "bomb_size": 1, "turn": True, "bomb_count": 1, "index": 1, "name": player.name}
             self.__coordinate_data[1][1] = "P1"
         elif len(self.__player_data) == 1:
-            self.__player_data[player] = {"coordinate": (self.__size[0] - 2, self.__size[1] - 2), "bomb_size": 1, "turn": True, "bomb_count": 1, "Index": 2}
+            self.__player_data[player] = {"coordinate": (self.__size[0] - 2, self.__size[1] - 2), "bomb_size": 1, "turn": True, "bomb_count": 1, "index": 2, "name": player.name}
             self.__coordinate_data[self.__size[0] - 2][self.__size[1] - 2] = "P2"
         elif len(self.__player_data) == 2:
-            self.__player_data[player] = {"coordinate": (self.__size[0] - 2, 1), "bomb_size": 1, "turn": True, "bomb_count": 1, "Index": 3}
+            self.__player_data[player] = {"coordinate": (self.__size[0] - 2, 1), "bomb_size": 1, "turn": True, "bomb_count": 1, "index": 3, "name": player.name}
             self.__coordinate_data[self.__size[0] - 2][1] = "P3"
         elif len(self.__player_data) == 3:
-            self.__player_data[player] = {"coordinate": (1, self.__size[1] - 2), "bomb_size": 1, "turn": True, "bomb_count": 1, "Index": 4}
+            self.__player_data[player] = {"coordinate": (1, self.__size[1] - 2), "bomb_size": 1, "turn": True, "bomb_count": 1, "index": 4, "name": player.name}
             self.__coordinate_data[1][self.__size[1] - 2] = "P4"
 
     def skip_turn(self, player):
@@ -68,7 +78,7 @@ class MapData:
 
     def get_player_data(self, target_player_index):
         for player in self.__player_data:
-            if self.__player_data[player]["Index"] == target_player_index:
+            if self.__player_data[player]["index"] == target_player_index:
                 return self.__player_data[player]
 
     def __tick(self):
@@ -107,8 +117,8 @@ class MapData:
         for i in range(0, bomb[2]):
             if right:
                 block = self.__coordinate_data[bomb[1][0] + i + 1][bomb[1][1]]
-                if block == "W":
-                    self.__coordinate_data[bomb[1][0] + i + 1][bomb[1][1]] = "."
+                if block[0] == "W":
+                    self.__coordinate_data[bomb[1][0] + i + 1][bomb[1][1]] = self.__coordinate_data[bomb[1][0] + i + 1][bomb[1][1]][-1]
                     right = False
                 elif block == "B":
                     for j in range(0, len(self.__bomb_data)):
@@ -124,8 +134,8 @@ class MapData:
 
             if left:
                 block = self.__coordinate_data[bomb[1][0] - i - 1][bomb[1][1]]
-                if block == "W":
-                    self.__coordinate_data[bomb[1][0] - i - 1][bomb[1][1]] = "."
+                if block[0] == "W":
+                    self.__coordinate_data[bomb[1][0] - i - 1][bomb[1][1]] = self.__coordinate_data[bomb[1][0] - i - 1][bomb[1][1]][-1]
                     left = False
                 elif block == "B":
                     for j in range(0, len(self.__bomb_data)):
@@ -141,8 +151,8 @@ class MapData:
 
             if top:
                 block = self.__coordinate_data[bomb[1][0]][bomb[1][1] + i + 1]
-                if block == "W":
-                    self.__coordinate_data[bomb[1][0]][bomb[1][1] + i + 1] = "."
+                if block[0] == "W":
+                    self.__coordinate_data[bomb[1][0]][bomb[1][1] + i + 1] = self.__coordinate_data[bomb[1][0]][bomb[1][1] + i + 1][-1]
                     top = False
                 elif block == "B":
                     for j in range(0, len(self.__bomb_data)):
@@ -158,8 +168,8 @@ class MapData:
 
             if bottom:
                 block = self.__coordinate_data[bomb[1][0]][bomb[1][1] - i - 1]
-                if block == "W":
-                    self.__coordinate_data[bomb[1][0]][bomb[1][1] - i - 1] = "."
+                if block[0] == "W":
+                    self.__coordinate_data[bomb[1][0]][bomb[1][1] - i - 1] = self.__coordinate_data[bomb[1][0]][bomb[1][1] - i - 1][-1]
                     bottom = False
                 elif block == "B":
                     for j in range(0, len(self.__bomb_data)):
@@ -183,9 +193,14 @@ class MapData:
                 else:
                     self.__coordinate_data[position[0]][position[1]] = "."
 
+                if self.__coordinate_data[position[0]][position[1] - 1] == "+":
+                    self.__player_data[player]["bomb_size"] += 1
+                elif self.__coordinate_data[position[0]][position[1] - 1] == "O":
+                    self.__player_data[player]["bomb_count"] += 1
+
                 self.__player_data[player]["coordinate"] = (position[0], position[1] - 1)
                 position = (position[0], position[1] - 1)
-                self.__coordinate_data[position[0]][position[1]] = "P" + str(self.__player_data[player]["Index"])
+                self.__coordinate_data[position[0]][position[1]] = "P" + str(self.__player_data[player]["index"])
                 return True
             else:
                 return False
@@ -198,9 +213,14 @@ class MapData:
                 else:
                     self.__coordinate_data[position[0]][position[1]] = "."
 
+                if self.__coordinate_data[position[0] + 1][position[1]] == "+":
+                    self.__player_data[player]["bomb_size"] += 1
+                elif self.__coordinate_data[position[0] + 1][position[1]] == "O":
+                    self.__player_data[player]["bomb_count"] += 1
+
                 self.__player_data[player]["coordinate"] = (position[0] + 1, position[1])
                 position = (position[0] + 1, position[1])
-                self.__coordinate_data[position[0]][position[1]] = "P" + str(self.__player_data[player]["Index"])
+                self.__coordinate_data[position[0]][position[1]] = "P" + str(self.__player_data[player]["index"])
                 return True
             else:
                 return False
@@ -213,9 +233,14 @@ class MapData:
                 else:
                     self.__coordinate_data[position[0]][position[1]] = "."
 
+                if self.__coordinate_data[position[0] - 1][position[1]] == "+":
+                    self.__player_data[player]["bomb_size"] += 1
+                elif self.__coordinate_data[position[0] - 1][position[1]] == "O":
+                    self.__player_data[player]["bomb_count"] += 1
+
                 self.__player_data[player]["coordinate"] = (position[0] - 1, position[1])
                 position = (position[0] - 1, position[1])
-                self.__coordinate_data[position[0]][position[1]] = "P" + str(self.__player_data[player]["Index"])
+                self.__coordinate_data[position[0]][position[1]] = "P" + str(self.__player_data[player]["index"])
                 return True
             else:
                 return False
@@ -228,9 +253,14 @@ class MapData:
                 else:
                     self.__coordinate_data[position[0]][position[1]] = "."
 
+                if self.__coordinate_data[position[0]][position[1] + 1] == "+":
+                    self.__player_data[player]["bomb_size"] += 1
+                elif self.__coordinate_data[position[0]][position[1] + 1] == "O":
+                    self.__player_data[player]["bomb_count"] += 1
+
                 self.__player_data[player]["coordinate"] = (position[0], position[1] + 1)
                 position = (position[0], position[1] + 1)
-                self.__coordinate_data[position[0]][position[1]] = "P" + str(self.__player_data[player]["Index"])
+                self.__coordinate_data[position[0]][position[1]] = "P" + str(self.__player_data[player]["index"])
                 return True
             else:
                 return False
