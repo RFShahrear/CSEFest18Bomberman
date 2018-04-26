@@ -32,9 +32,8 @@ class Visualizer:
         self.matrix = map_data.get_full_map()
 
         self.gameDisplay = pygame.display.set_mode(
-            (len(self.matrix[0]) * self.blockSize, len(self.matrix) * self.blockSize))
+            (len(self.matrix[0]) * self.blockSize + 300, len(self.matrix) * self.blockSize))
         pygame.display.set_caption('Bomberman')
-
 
     def checkExit(self):
         game_exit = False
@@ -51,14 +50,20 @@ class Visualizer:
         image = _image_library.get(path)
         if image is None:
             canonized_path = path.replace('/', os.sep).replace('\\', os.sep)
-            image = pygame.image.load(canonized_path)
+            image = pygame.image.load("Images\\" + canonized_path)
             _image_library[path] = image
         return image
 
     def start_visualization(self):
         self.game_loop()
 
-    def update_map(self):
+    def message_to_screen(self, msg, color, x, y, angle=0):
+        font = pygame.font.SysFont("times new roman", 25)
+        screen_text = font.render(msg, True, color)
+        screen_text = pygame.transform.rotate(screen_text, angle)
+        self.gameDisplay.blit(screen_text, [x, y])
+
+    def update_map(self, player):
         if self.checkExit():
             pygame.quit()
             quit()
@@ -77,17 +82,26 @@ class Visualizer:
                     image = 'path.png'
                 elif self.matrix[i][j] == 'B':
                     image = 'bomb.png'
-                elif self.matrix[i][j] == 'P1':
+                elif self.matrix[i][j] == "P1,B" or self.matrix[i][j] == 'P1':
                     image = 'player1.PNG'
-                elif self.matrix[i][j] == 'P2':
+                elif self.matrix[i][j] == "P2,B" or self.matrix[i][j] == 'P2':
                     image = 'player2.PNG'
-                elif self.matrix[i][j] == 'P3':
+                elif self.matrix[i][j] == "P3,B" or self.matrix[i][j] == 'P3':
                     image = 'player3.PNG'
-                elif self.matrix[i][j] == 'P4':
+                elif self.matrix[i][j] == "P4,B" or self.matrix[i][j] == 'P4':
                     image = 'player4.PNG'
+
 
                 self.gameDisplay.blit(self.get_image(image),
                                       (j * self.blockSize, i * self.blockSize, self.blockSize, self.blockSize))
+        pygame.draw.rect(self.gameDisplay, self.black,
+                         (len(self.matrix[0]) * self.blockSize, 0, 300, len(self.matrix) * self.blockSize));
+
+        for i in range(len(player)):
+            imagename = 'player' + str(i + 1) + 'Large.png'
+            self.gameDisplay.blit(self.get_image(imagename), (len(self.matrix[0]) * self.blockSize, i*112))
+            name = 'Player ' + str(i+1)
+            self.message_to_screen(name, self.white, len(self.matrix[0]) * self.blockSize + 114, i*112 + 5)
 
         pygame.display.update()
 
@@ -147,6 +161,7 @@ class Visualizer:
                         image = 'player1.PNG'
 
                     self.gameDisplay.blit(self.get_image(image), (j * self.blockSize, i * self.blockSize, self.blockSize, self.blockSize))
+            pygame.draw.rect(self.gameDisplay, self.black, (len(self.matrix[0]) * self.blockSize, 0, 300, len(self.matrix) * self.blockSize));
             pygame.display.update()
 
         pygame.quit()
@@ -162,6 +177,7 @@ def main():
     game = Visualizer(map_data)
     p1 = Player.Player(map_data, "P1")
     p2 = Player.Player(map_data, "P2")
+    players = [p1, p2]
     map_data.add_player(p1)
     map_data.add_player(p2)
     t1 = Thread(target=start, args=(p1,))
@@ -169,8 +185,8 @@ def main():
     t1.start()
     t2.start()
     while not p1.over:
-        game.update_map()
-        time.sleep(2)
+        game.update_map(players)
+        time.sleep(0.5)
 
         map_data._MapData__next_round()
     print(map_data._MapData__deduce_winner().name)
