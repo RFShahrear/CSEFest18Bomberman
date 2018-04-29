@@ -26,6 +26,7 @@ Visualizer : Pygame handler, not the contestant's concern
        schedule_move (Direction: N/S/E/W)   -> move to given direction
        skip_turn                            -> Do nothing in current turn
        get_full_map                         -> Provides the current map
+       get_self_data                        -> Provides own info
        get_player_data (Index: 1,2,3,4)     -> provides information
 
     Player Data : A Dictionary Containing
@@ -37,10 +38,15 @@ Visualizer : Pygame handler, not the contestant's concern
 Player : Written by contestants, a sample is given.
 
     What has to be done:
-        1. Have parameter restart, done, success
+        1. Have parameters restart, done, success, index
           restart   -> Start next round
           done      -> Indicate game over
           success   -> Notifies if last action was successful
+	  index     -> Your position in game
+	  		1 -> Upper Left
+			2 -> Lower Right
+			3 -> Lower Left
+			4 -> Upper Right
         2. Have exactly one call to any of
           -> schedule bomb
           -> schedule_move
