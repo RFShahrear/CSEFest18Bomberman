@@ -79,7 +79,10 @@ class MapData:
     def get_player_data(self, target_player_index):
         for player in self.__player_data:
             if self.__player_data[player]["index"] == target_player_index:
-                return self.__player_data[player]
+                return_dict = dict(self.__player_data[player])
+                return_dict.pop("turn")
+                return_dict.pop("name")
+                return return_dict
 
     def __tick(self):
         print("Executing Tick")

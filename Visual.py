@@ -50,7 +50,7 @@ class Visualizer:
         image = _image_library.get(path)
         if image is None:
             canonized_path = path.replace('/', os.sep).replace('\\', os.sep)
-            image = pygame.image.load("Images\\" + canonized_path)
+            image = pygame.image.load(os.path.join("Images", canonized_path))
             _image_library[path] = image
         return image
 
@@ -63,7 +63,7 @@ class Visualizer:
         screen_text = pygame.transform.rotate(screen_text, angle)
         self.gameDisplay.blit(screen_text, [x, y])
 
-    def update_map(self, player):
+    def update_map(self, players):
         if self.checkExit():
             pygame.quit()
             quit()
@@ -100,13 +100,13 @@ class Visualizer:
         pygame.draw.rect(self.gameDisplay, self.black,
                          (len(self.matrix[0]) * self.blockSize, 0, 300, len(self.matrix) * self.blockSize))
 
-        for i in range(len(player)):
+        for player in players:
+            i = players[player]["index"] - 1
             imagename = 'player' + str(i + 1) + 'Large.png'
             self.gameDisplay.blit(self.get_image(imagename), (len(self.matrix[0]) * self.blockSize, i*112))
-            player = self.map_data.get_player_data(i + 1)
-            name = player["name"]
-            bomb_size = "Bomb Size " + str(player["bomb_size"])
-            bomb_count = "Bomb Count" + str(player["bomb_count"])
+            name = players[player]["name"]
+            bomb_size = "Bomb Size " + str(players[player]["bomb_size"])
+            bomb_count = "Bomb Count" + str(players[player]["bomb_count"])
             self.message_to_screen(name, self.white, len(self.matrix[0]) * self.blockSize + 114, i*112 + 5)
             self.message_to_screen(bomb_size, self.white, len(self.matrix[0]) * self.blockSize + 114, i * 112 + 30)
             self.message_to_screen(bomb_count, self.white, len(self.matrix[0]) * self.blockSize + 114, i * 112 + 55)
@@ -185,7 +185,6 @@ def main():
     game = Visualizer(map_data)
     p1 = Player.Player(map_data, "P1")
     p2 = Player.Player(map_data, "P2")
-    players = [p1, p2]
     map_data.add_player(p1)
     map_data.add_player(p2)
     t1 = Thread(target=start, args=(p1,))
@@ -193,7 +192,7 @@ def main():
     t1.start()
     t2.start()
     while not p1.over:
-        game.update_map(players)
+        game.update_map(map_data._MapData__player_data)
         time.sleep(0.5)
 
         map_data._MapData__next_round()
