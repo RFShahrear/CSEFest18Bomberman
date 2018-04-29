@@ -21,6 +21,7 @@ Classes:
 Visualizer : Pygame handler, not the contestant's concern
 
     MapData : Contains game information
+    	Every Function need to be called with the player object as the first parameter.
        (Functions starting with __ is private and not normally callable)
        schedule_bomb                        -> Place a bomb on current position
        schedule_move (Direction: N/S/E/W)   -> move to given direction
