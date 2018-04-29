@@ -181,16 +181,33 @@ def start(player):
 
 
 def main():
-    map_data = Processor.MapData("map.txt", (15, 17))
+    map_data = Processor.MapData("map.txt", (15, 17), 4)
     game = Visualizer(map_data)
     p1 = Player.Player(map_data, "P1")
     p2 = Player.Player(map_data, "P2")
+    p3 = Player.Player(map_data, "P3")
+    p4 = Player.Player(map_data, "P4")
+
     map_data.add_player(p1)
     map_data.add_player(p2)
+    map_data.add_player(p3)
+    map_data.add_player(p4)
+
+    p1.index = 1
+    p2.index = 2
+    p3.index = 3
+    p4.index = 4
+
     t1 = Thread(target=start, args=(p1,))
     t2 = Thread(target=start, args=(p2,))
+    t3 = Thread(target=start, args=(p3,))
+    t4 = Thread(target=start, args=(p4,))
+
     t1.start()
     t2.start()
+    t3.start()
+    t4.start()
+
     while not p1.over:
         game.update_map(map_data._MapData__player_data)
         time.sleep(0.5)

@@ -7,10 +7,12 @@ class Player:
             self.name = "Unnamed"
         else:
             self.name = name
+
         self.map_data = map_data
         self.over = False
         self.success = True
         self.reset = False
+        self.index = -1
 
     def play(self):
         count = 0

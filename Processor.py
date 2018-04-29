@@ -2,7 +2,7 @@ import Player
 
 
 class MapData:
-    def __init__(self, file_name, size, player_count = 2):
+    def __init__(self, file_name, size, player_count=2):
         file = open(file_name, "r")
         self.__player_count = player_count
         self.__size = size
@@ -83,6 +83,9 @@ class MapData:
                 return_dict.pop("turn")
                 return_dict.pop("name")
                 return return_dict
+
+    def get_self_data(self, player):
+        return self.__player_data[player]
 
     def __tick(self):
         print("Executing Tick")
