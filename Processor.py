@@ -133,7 +133,13 @@ class MapData:
                 elif block[0] == "P":
                     self.__coordinate_data[bomb[1][0] + i + 1][bomb[1][1]] = "."
                     for player in self.__player_data:
-                        player.over = True
+                        if self.__player_data[player]["coordinate"][0] == bomb[1]:
+                            player.over = True
+                            self.__player_data.pop(player)
+                            self.__player_count -= 1
+                    if self.__player_count == 1:
+                        for player in self.__player_data:
+                            player.over = True
 
             if left:
                 block = self.__coordinate_data[bomb[1][0] - i - 1][bomb[1][1]]
@@ -150,7 +156,13 @@ class MapData:
                 elif block[0] == "P":
                     self.__coordinate_data[bomb[1][0] - i - 1][bomb[1][1]] = "."
                     for player in self.__player_data:
-                        player.over = True
+                        if self.__player_data[player]["coordinate"][0] == bomb[1]:
+                            player.over = True
+                            self.__player_data.pop(player)
+                            self.__player_count -= 1
+                    if self.__player_count == 1:
+                        for player in self.__player_data:
+                            player.over = True
 
             if top:
                 block = self.__coordinate_data[bomb[1][0]][bomb[1][1] + i + 1]
@@ -167,7 +179,13 @@ class MapData:
                 elif block[0] == "P":
                     self.__coordinate_data[bomb[1][0]][bomb[1][1] + i + 1] = "."
                     for player in self.__player_data:
-                        player.over = True
+                        if self.__player_data[player]["coordinate"][0] == bomb[1]:
+                            player.over = True
+                            self.__player_data.pop(player)
+                            self.__player_count -= 1
+                    if self.__player_count == 1:
+                        for player in self.__player_data:
+                            player.over = True
 
             if bottom:
                 block = self.__coordinate_data[bomb[1][0]][bomb[1][1] - i - 1]
@@ -184,7 +202,13 @@ class MapData:
                 elif block[0] == "P":
                     self.__coordinate_data[bomb[1][0]][bomb[1][1] - i - 1] = "."
                     for player in self.__player_data:
-                        player.over = True
+                        if self.__player_data[player]["coordinate"][0] == bomb[1]:
+                            player.over = True
+                            self.__player_data.pop(player)
+                            self.__player_count -= 1
+                    if self.__player_count == 1:
+                        for player in self.__player_data:
+                            player.over = True
 
     def __move(self, player, direction):
         position = self.__player_data[player]["coordinate"]
