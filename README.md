@@ -52,9 +52,13 @@ Player : Written by contestants, a sample is given.
           -> schedule bomb
           -> schedule_move
           -> skip_turn
-        3. reset restart to false when it's true and then starting next round
-        3. Calling any of aforementioned functions before restart is triggered will
-           result in a disqualification
+        3. Execution of a round :
+	  -> After all players schedule their moves, the processor will execute all necessary actions to complete those moves.
+	  -> After execution, the restart variable of each living player will be set to true.
+	  -> If a player dies, over variable of that player will be set to true.
+	  -> It will be the players' duty to make sure it does not schedule any more move after the over variable is set to true.
+	  -> If restart is true and over is false, the player can attempt to schedule the next move. Note that if you do not set the restart variable back to false you will not be able to prevent scheduling multiple times before one round is over.
+	  -> Attempting to schedule multiple action in one round will result in disqualification.
         4. Attempting to call private functions or edit internal variables will result
            in disqualification
 
