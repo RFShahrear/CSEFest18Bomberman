@@ -4,6 +4,7 @@ import Player
 class MapData:
     def __init__(self, file_name, size, player_count=2):
         file = open(file_name, "r")
+        self.over = False
         self.__player_count = player_count
         self.__size = size
         self.__game_over = False
@@ -33,16 +34,16 @@ class MapData:
 
     def add_player(self, player):
         if len(self.__player_data) == 0:
-            self.__player_data[player] = {"coordinate": (1, 1), "bomb_size": 1, "turn": True, "bomb_count": 1, "index": 1, "name": player.name}
+            self.__player_data[player] = {"coordinate": (1, 1), "bomb_size": 1, "turn": True, "bomb_count": 1, "index": 1, "name": player.name, "point": 0}
             self.__coordinate_data[1][1] = "P1"
         elif len(self.__player_data) == 1:
-            self.__player_data[player] = {"coordinate": (self.__size[0] - 2, self.__size[1] - 2), "bomb_size": 1, "turn": True, "bomb_count": 1, "index": 2, "name": player.name}
+            self.__player_data[player] = {"coordinate": (self.__size[0] - 2, self.__size[1] - 2), "bomb_size": 1, "turn": True, "bomb_count": 1, "index": 2, "name": player.name, "point": 0}
             self.__coordinate_data[self.__size[0] - 2][self.__size[1] - 2] = "P2"
         elif len(self.__player_data) == 2:
-            self.__player_data[player] = {"coordinate": (self.__size[0] - 2, 1), "bomb_size": 1, "turn": True, "bomb_count": 1, "index": 3, "name": player.name}
+            self.__player_data[player] = {"coordinate": (self.__size[0] - 2, 1), "bomb_size": 1, "turn": True, "bomb_count": 1, "index": 3, "name": player.name, "point": 0}
             self.__coordinate_data[self.__size[0] - 2][1] = "P3"
         elif len(self.__player_data) == 3:
-            self.__player_data[player] = {"coordinate": (1, self.__size[1] - 2), "bomb_size": 1, "turn": True, "bomb_count": 1, "index": 4, "name": player.name}
+            self.__player_data[player] = {"coordinate": (1, self.__size[1] - 2), "bomb_size": 1, "turn": True, "bomb_count": 1, "index": 4, "name": player.name, "point": 0}
             self.__coordinate_data[1][self.__size[1] - 2] = "P4"
 
     def skip_turn(self, player):
@@ -102,11 +103,15 @@ class MapData:
         self.__current_round += 1
 
     def __next_round(self):
-        self.__count = 0
-
-        for player in self.__player_data:
-            self.__player_data[player]["turn"] = True
-            player.reset = True
+        if self.__current_round == 201:
+            self.over = True
+            for player in self.__player_data:
+                player.over = True
+        else:
+            self.__count = 0
+            for player in self.__player_data:
+                self.__player_data[player]["turn"] = True
+                player.reset = True
 
     def __explode(self, bomb):
         if self.__coordinate_data[bomb[1][0]][bomb[1][1]][0] == "P":
@@ -124,6 +129,7 @@ class MapData:
             if right:
                 block = self.__coordinate_data[bomb[1][0] + i + 1][bomb[1][1]]
                 if block[0] == "W":
+                    self.__player_data[bomb[3]]["point"] += 1
                     self.__coordinate_data[bomb[1][0] + i + 1][bomb[1][1]] = self.__coordinate_data[bomb[1][0] + i + 1][bomb[1][1]][-1]
                     right = False
                 elif block == "B":
@@ -141,12 +147,14 @@ class MapData:
                             self.__player_data.pop(player)
                             self.__player_count -= 1
                     if self.__player_count == 1:
+                        self.over = True
                         for player in self.__player_data:
                             player.over = True
 
             if left:
                 block = self.__coordinate_data[bomb[1][0] - i - 1][bomb[1][1]]
                 if block[0] == "W":
+                    self.__player_data[bomb[3]]["point"] += 1
                     self.__coordinate_data[bomb[1][0] - i - 1][bomb[1][1]] = self.__coordinate_data[bomb[1][0] - i - 1][bomb[1][1]][-1]
                     left = False
                 elif block == "B":
@@ -164,12 +172,14 @@ class MapData:
                             self.__player_data.pop(player)
                             self.__player_count -= 1
                     if self.__player_count == 1:
+                        self.over = True
                         for player in self.__player_data:
                             player.over = True
 
             if top:
                 block = self.__coordinate_data[bomb[1][0]][bomb[1][1] + i + 1]
                 if block[0] == "W":
+                    self.__player_data[bomb[3]]["point"] += 1
                     self.__coordinate_data[bomb[1][0]][bomb[1][1] + i + 1] = self.__coordinate_data[bomb[1][0]][bomb[1][1] + i + 1][-1]
                     top = False
                 elif block == "B":
@@ -187,12 +197,14 @@ class MapData:
                             self.__player_data.pop(player)
                             self.__player_count -= 1
                     if self.__player_count == 1:
+                        self.over = True
                         for player in self.__player_data:
                             player.over = True
 
             if bottom:
                 block = self.__coordinate_data[bomb[1][0]][bomb[1][1] - i - 1]
                 if block[0] == "W":
+                    self.__player_data[bomb[3]]["point"] += 1
                     self.__coordinate_data[bomb[1][0]][bomb[1][1] - i - 1] = self.__coordinate_data[bomb[1][0]][bomb[1][1] - i - 1][-1]
                     bottom = False
                 elif block == "B":
@@ -210,6 +222,7 @@ class MapData:
                             self.__player_data.pop(player)
                             self.__player_count -= 1
                     if self.__player_count == 1:
+                        self.over = True
                         for player in self.__player_data:
                             player.over = True
 
@@ -305,10 +318,20 @@ class MapData:
         return False
 
     def __deduce_winner(self):
-        for player in self.__player_data:
-            position = self.__player_data[player]["coordinate"]
-            if self.__coordinate_data[position[0]][position[1]][0] == "P":
-                return player
+        if self.__player_count == 1:
+            for player in self.__player_data:
+                position = self.__player_data[player]["coordinate"]
+                if self.__coordinate_data[position[0]][position[1]][0] == "P":
+                    return player
+        else:
+            max_point = -1
+            winner = None
+            for player in self.__player_data:
+                if self.__player_data[player]["point"] > max_point:
+                    max_point = self.__player_data[player]["point"]
+                    winner = player
+
+            return winner
 
 
 def main():

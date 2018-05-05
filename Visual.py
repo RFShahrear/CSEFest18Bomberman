@@ -106,10 +106,12 @@ class Visualizer:
             self.gameDisplay.blit(self.get_image(imagename), (len(self.matrix[0]) * self.blockSize, i*112))
             name = players[player]["name"]
             bomb_size = "Bomb Size " + str(players[player]["bomb_size"])
-            bomb_count = "Bomb Count" + str(players[player]["bomb_count"])
+            bomb_count = "Bomb Count " + str(players[player]["bomb_count"])
+            point = "Point " + str(players[player]["point"])
             self.message_to_screen(name, self.white, len(self.matrix[0]) * self.blockSize + 114, i*112 + 5)
             self.message_to_screen(bomb_size, self.white, len(self.matrix[0]) * self.blockSize + 114, i * 112 + 30)
             self.message_to_screen(bomb_count, self.white, len(self.matrix[0]) * self.blockSize + 114, i * 112 + 55)
+            self.message_to_screen(point, self.white, len(self.matrix[0]) * self.blockSize + 114, i * 112 + 80)
 
         pygame.display.update()
 
@@ -208,7 +210,7 @@ def main():
     t3.start()
     t4.start()
 
-    while not p1.over:
+    while not map_data.over:
         game.update_map(map_data._MapData__player_data)
         time.sleep(0.5)
 
