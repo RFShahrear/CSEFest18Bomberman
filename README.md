@@ -35,6 +35,7 @@ Visualizer : Pygame handler, not the contestant's concern
         "bomb_size"                         -> Explosion Radius
         "bomb_count"                        -> Number of Bombs that can be deployed at a time
         "index"                             -> Player Index
+	"point"				    -> Current Point of Player
 	
 Player : Written by contestants, a sample is given.
 
@@ -61,4 +62,11 @@ Player : Written by contestants, a sample is given.
 	  -> Attempting to schedule multiple action in one round will result in disqualification.
         4. Attempting to call private functions or edit internal variables will result
            in disqualification
+	   
+Game End:
+
+	1. The game will last for 200 turns (subject to change)
+	2. Every block broken will award one point to the breaking player.
+	3. If there is only one player on the field, that player will be the winner.
+	4. A dead player cannot win, regardless of points accumulated.
 
