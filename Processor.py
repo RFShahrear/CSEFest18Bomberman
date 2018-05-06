@@ -53,7 +53,6 @@ class MapData:
             self.__tick()
 
     def schedule_move(self, player, direction):
-        print("Scheduling Move")
         self.__event_queue.append(["move", player, direction])
         self.__player_data[player]["turn"] = False
         self.__count += 1
@@ -89,7 +88,6 @@ class MapData:
         return self.__player_data[player]
 
     def __tick(self):
-        print("Executing Tick")
         for event in self.__event_queue:
             if event[0] == "move":
                 event[1].success = self.__move(event[1], event[2])
@@ -101,6 +99,7 @@ class MapData:
             self.__explode(self.__bomb_data.pop(0))
 
         self.__current_round += 1
+        print(self.__current_round)
 
     def __next_round(self):
         if self.__current_round == 201:
@@ -152,6 +151,7 @@ class MapData:
                             player.over = True
                             self.__player_data.pop(player)
                             self.__player_count -= 1
+                            break
                     if self.__player_count == 1:
                         self.over = True
                         for player in self.__player_data:
@@ -178,6 +178,7 @@ class MapData:
                             player.over = True
                             self.__player_data.pop(player)
                             self.__player_count -= 1
+                            break
                     if self.__player_count == 1:
                         self.over = True
                         for player in self.__player_data:
@@ -204,6 +205,7 @@ class MapData:
                             player.over = True
                             self.__player_data.pop(player)
                             self.__player_count -= 1
+                            break
                     if self.__player_count == 1:
                         self.over = True
                         for player in self.__player_data:
@@ -230,6 +232,7 @@ class MapData:
                             player.over = True
                             self.__player_data.pop(player)
                             self.__player_count -= 1
+                            break
                     if self.__player_count == 1:
                         self.over = True
                         for player in self.__player_data:

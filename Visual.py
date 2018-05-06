@@ -64,6 +64,7 @@ class Visualizer:
         self.gameDisplay.blit(screen_text, [x, y])
 
     def update_map(self, players):
+        stored_players = dict(players)
         if self.checkExit():
             pygame.quit()
             quit()
@@ -100,14 +101,14 @@ class Visualizer:
         pygame.draw.rect(self.gameDisplay, self.black,
                          (len(self.matrix[0]) * self.blockSize, 0, 300, len(self.matrix) * self.blockSize))
 
-        for player in players:
-            i = players[player]["index"] - 1
+        for player in stored_players:
+            i = stored_players[player]["index"] - 1
             imagename = 'player' + str(i + 1) + 'Large.png'
             self.gameDisplay.blit(self.get_image(imagename), (len(self.matrix[0]) * self.blockSize, i*112))
-            name = players[player]["name"]
-            bomb_size = "Bomb Size " + str(players[player]["bomb_size"])
-            bomb_count = "Bomb Count " + str(players[player]["bomb_count"])
-            point = "Point " + str(players[player]["point"])
+            name = stored_players[player]["name"]
+            bomb_size = "Bomb Size " + str(stored_players[player]["bomb_size"])
+            bomb_count = "Bomb Count " + str(stored_players[player]["bomb_count"])
+            point = "Point " + str(stored_players[player]["point"])
             self.message_to_screen(name, self.white, len(self.matrix[0]) * self.blockSize + 114, i*112 + 5)
             self.message_to_screen(bomb_size, self.white, len(self.matrix[0]) * self.blockSize + 114, i * 112 + 30)
             self.message_to_screen(bomb_count, self.white, len(self.matrix[0]) * self.blockSize + 114, i * 112 + 55)
@@ -212,7 +213,7 @@ def main():
 
     while not map_data.over:
         game.update_map(map_data._MapData__player_data)
-        time.sleep(0.5)
+        time.sleep(0.1)
 
         map_data._MapData__next_round()
     print(map_data._MapData__deduce_winner().name)
