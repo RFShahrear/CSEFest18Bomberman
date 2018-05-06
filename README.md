@@ -40,7 +40,7 @@ Visualizer : Pygame handler, not the contestant's concern
 Player : Written by contestants, a sample is given.
 
     What has to be done:
-        1. Have parameters restart, done, success, index
+        1. Have variables restart, done, success, index initialized at __init__ function
           restart   -> Start next round
           done      -> Indicate game over
           success   -> Notifies if last action was successful
@@ -53,6 +53,7 @@ Player : Written by contestants, a sample is given.
           -> schedule bomb
           -> schedule_move
           -> skip_turn
+	  in the main playing loop. While it is encouraged to name this method "play", it is not mandatory.
         3. Execution of a round :
 	  -> After all players schedule their moves, the processor will execute all necessary actions to complete those moves.
 	  -> After execution, the restart variable of each living player will be set to true.
