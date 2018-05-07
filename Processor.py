@@ -95,7 +95,10 @@ class MapData:
                 self.__place_bomb(event[1], event[2], event[3])
         self.__event_queue.clear()
         while len(self.__bomb_data) > 0 and self.__bomb_data[0][0] == self.__current_round:
-            self.__player_data[self.__bomb_data[0][3]]["bomb_count"] += 1
+            try:
+                self.__player_data[self.__bomb_data[0][3]]["bomb_count"] += 1
+            except KeyError:
+                pass
             self.__explode(self.__bomb_data.pop(0))
 
         self.__current_round += 1
@@ -133,7 +136,10 @@ class MapData:
             if right:
                 block = self.__coordinate_data[bomb[1][0] + i + 1][bomb[1][1]]
                 if block[0] == "W":
-                    self.__player_data[bomb[3]]["point"] += 1
+                    try:
+                        self.__player_data[bomb[3]]["point"] += 1
+                    except KeyError:
+                        pass
                     self.__coordinate_data[bomb[1][0] + i + 1][bomb[1][1]] = self.__coordinate_data[bomb[1][0] + i + 1][bomb[1][1]][-1]
                     right = False
                 elif block == "B":
@@ -160,7 +166,10 @@ class MapData:
             if left:
                 block = self.__coordinate_data[bomb[1][0] - i - 1][bomb[1][1]]
                 if block[0] == "W":
-                    self.__player_data[bomb[3]]["point"] += 1
+                    try:
+                        self.__player_data[bomb[3]]["point"] += 1
+                    except KeyError:
+                        pass
                     self.__coordinate_data[bomb[1][0] - i - 1][bomb[1][1]] = self.__coordinate_data[bomb[1][0] - i - 1][bomb[1][1]][-1]
                     left = False
                 elif block == "B":
@@ -187,7 +196,10 @@ class MapData:
             if top:
                 block = self.__coordinate_data[bomb[1][0]][bomb[1][1] + i + 1]
                 if block[0] == "W":
-                    self.__player_data[bomb[3]]["point"] += 1
+                    try:
+                        self.__player_data[bomb[3]]["point"] += 1
+                    except KeyError:
+                        pass
                     self.__coordinate_data[bomb[1][0]][bomb[1][1] + i + 1] = self.__coordinate_data[bomb[1][0]][bomb[1][1] + i + 1][-1]
                     top = False
                 elif block == "B":
@@ -214,7 +226,10 @@ class MapData:
             if bottom:
                 block = self.__coordinate_data[bomb[1][0]][bomb[1][1] - i - 1]
                 if block[0] == "W":
-                    self.__player_data[bomb[3]]["point"] += 1
+                    try:
+                        self.__player_data[bomb[3]]["point"] += 1
+                    except KeyError:
+                        pass
                     self.__coordinate_data[bomb[1][0]][bomb[1][1] - i - 1] = self.__coordinate_data[bomb[1][0]][bomb[1][1] - i - 1][-1]
                     bottom = False
                 elif block == "B":
