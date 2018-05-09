@@ -29,6 +29,7 @@ Visualizer : Pygame handler, not the contestant's concern
        get_full_map                         -> Provides the current map
        get_self_data                        -> Provides own info
        get_player_data (Index: 1,2,3,4)     -> provides information
+       get_all_bombs			    -> provides bomb data
 
     Player Data : A Dictionary Containing
         "coordinate"                        -> Position
@@ -36,6 +37,13 @@ Visualizer : Pygame handler, not the contestant's concern
         "bomb_count"                        -> Number of Bombs that can be deployed at a time
         "index"                             -> Player Index
 	"point"				    -> Current Point of Player
+
+    Bomb Data : A Dictionary Containing
+        "coordinate"                        -> Position
+        "radius"                            -> Explosion Radius
+        "player_index"                      -> Index of the player placing the bomb
+	"time_till_detonation"		    -> Ticks remaining till the bomb explodes (this is initially 7)
+
 	
 Player : Written by contestants, a sample is given.
 
@@ -66,7 +74,7 @@ Player : Written by contestants, a sample is given.
 	   
 Game End:
 
-	1. The game will last for 200 turns (subject to change)
+	1. The game will last for 300 turns (subject to change)
 	2. Every block broken will award one point to the breaking player.
 	3. If there is only one player on the field, that player will be the winner.
 	4. A dead player cannot win, regardless of points accumulated.
