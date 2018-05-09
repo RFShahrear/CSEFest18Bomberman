@@ -64,7 +64,32 @@ class Visualizer:
         screen_text = pygame.transform.rotate(screen_text, angle)
         self.gameDisplay.blit(screen_text, [x, y])
 
+    def explode(self):
+        image = "exp.png"
+        for event in self.map_data.explosion_event:
+            i, j = event[0]
+            self.gameDisplay.blit(self.get_image(image),
+                                  (j * self.blockSize, i * self.blockSize, self.blockSize, self.blockSize))
+            for m in range(1, event[1][2] + 1):
+                self.gameDisplay.blit(self.get_image(image),
+                                      ((j + m) * self.blockSize, i * self.blockSize, self.blockSize, self.blockSize))
+            for m in range(1, event[1][3] + 1):
+                self.gameDisplay.blit(self.get_image(image),
+                                      ((j - m) * self.blockSize, i * self.blockSize, self.blockSize, self.blockSize))
+            for m in range(1, event[1][0] + 1):
+                self.gameDisplay.blit(self.get_image(image),
+                                      ((j) * self.blockSize, (i + m) * self.blockSize, self.blockSize, self.blockSize))
+            for m in range(1, event[1][1] + 1):
+                self.gameDisplay.blit(self.get_image(image),
+                                      ((j) * self.blockSize, (i - m) * self.blockSize, self.blockSize, self.blockSize))
+        self.map_data.explosion_event.clear()
+        pygame.display.update()
+        time.sleep(1)
+
     def update_map(self, players):
+        if len(self.map_data.explosion_event) > 0:
+            self.explode()
+
         stored_players = dict(players)
         if self.checkExit():
             pygame.quit()

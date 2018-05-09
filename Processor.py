@@ -5,6 +5,7 @@ class MapData:
     def __init__(self, file_name, size, player_count=2):
         file = open(file_name, "r")
         self.over = False
+        self.explosion_event = []
         self.round_complete = False
         self.__player_count = player_count
         self.__size = size
@@ -128,6 +129,7 @@ class MapData:
                 player.reset = True
 
     def __explode(self, bomb):
+        new_explosion = [0,0,0,0]
         try:
             self.__player_data[bomb[3]]["bomb_count"] += 1
         except KeyError:
@@ -158,6 +160,7 @@ class MapData:
                     except KeyError:
                         pass
                     self.__coordinate_data[bomb[1][0] + i + 1][bomb[1][1]] = self.__coordinate_data[bomb[1][0] + i + 1][bomb[1][1]][-1]
+                    new_explosion[0] = i
                     right = False
                 elif block == "B":
                     for j in range(0, len(self.__bomb_data)):
@@ -165,6 +168,7 @@ class MapData:
                             self.__explode(self.__bomb_data.pop(j))
                             break
                 elif block == "I":
+                    new_explosion[0] = i - 1
                     right = False
                 elif block[0] == "P":
                     self.__coordinate_data[bomb[1][0] + i + 1][bomb[1][1]] = "."
@@ -188,6 +192,7 @@ class MapData:
                     except KeyError:
                         pass
                     self.__coordinate_data[bomb[1][0] - i - 1][bomb[1][1]] = self.__coordinate_data[bomb[1][0] - i - 1][bomb[1][1]][-1]
+                    new_explosion[1] = i
                     left = False
                 elif block == "B":
                     for j in range(0, len(self.__bomb_data)):
@@ -195,6 +200,7 @@ class MapData:
                             self.__explode(self.__bomb_data.pop(j))
                             break
                 elif block == "I":
+                    new_explosion[1] = i - 1
                     left = False
                 elif block[0] == "P":
                     self.__coordinate_data[bomb[1][0] - i - 1][bomb[1][1]] = "."
@@ -218,6 +224,7 @@ class MapData:
                     except KeyError:
                         pass
                     self.__coordinate_data[bomb[1][0]][bomb[1][1] + i + 1] = self.__coordinate_data[bomb[1][0]][bomb[1][1] + i + 1][-1]
+                    new_explosion[2] = i
                     top = False
                 elif block == "B":
                     for j in range(0, len(self.__bomb_data)):
@@ -225,6 +232,7 @@ class MapData:
                             self.__explode(self.__bomb_data.pop(j))
                             break
                 elif block == "I":
+                    new_explosion[2] = i - 1
                     top = False
                 elif block[0] == "P":
                     self.__coordinate_data[bomb[1][0]][bomb[1][1] + i + 1] = "."
@@ -248,6 +256,7 @@ class MapData:
                     except KeyError:
                         pass
                     self.__coordinate_data[bomb[1][0]][bomb[1][1] - i - 1] = self.__coordinate_data[bomb[1][0]][bomb[1][1] - i - 1][-1]
+                    new_explosion[3] = i
                     bottom = False
                 elif block == "B":
                     for j in range(0, len(self.__bomb_data)):
@@ -255,6 +264,7 @@ class MapData:
                             self.__explode(self.__bomb_data.pop(j))
                             break
                 elif block == "I":
+                    new_explosion[3] = i - 1
                     bottom = False
                 elif block[0] == "P":
                     self.__coordinate_data[bomb[1][0]][bomb[1][1] - i - 1] = "."
@@ -269,6 +279,12 @@ class MapData:
                         self.over = True
                         for player in self.__player_data:
                             player.over = True
+
+        for i in range(0, 4):
+            if new_explosion[i] == 0:
+                new_explosion[i] = bomb[2]
+
+        self.explosion_event.append((bomb[1], new_explosion))
 
     def __move(self, player, direction):
         position = self.__player_data[player]["coordinate"]
