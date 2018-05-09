@@ -105,7 +105,7 @@ class MapData:
         print(self.__current_round)
 
     def __next_round(self):
-        if self.__current_round == 201:
+        if self.__current_round == 301:
             self.over = True
             for player in self.__player_data:
                 player.over = True
@@ -338,7 +338,7 @@ class MapData:
     def __place_bomb(self, position, radius, player):
         if self.__player_data[player]["bomb_count"] > 0 and position not in self.__to_be_placed:
             self.__player_data[player]["bomb_count"] -= 1
-            self.__bomb_data.append([self.__current_round + 10, position, radius, player])
+            self.__bomb_data.append([self.__current_round + 7, position, radius, player])
             self.__bomb_data.sort(key=lambda data:data[0])
             self.__to_be_placed.append(position)
             return True
