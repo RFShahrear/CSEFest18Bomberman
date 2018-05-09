@@ -5,6 +5,7 @@ class MapData:
     def __init__(self, file_name, size, player_count=2):
         file = open(file_name, "r")
         self.over = False
+        self.round_complete = False
         self.__player_count = player_count
         self.__size = size
         self.__game_over = False
@@ -47,12 +48,14 @@ class MapData:
             self.__coordinate_data[1][self.__size[1] - 2] = "P4"
 
     def skip_turn(self, player):
+        print("Skipped by", player.index)
         self.__player_data[player]["turn"] = False
         self.__count += 1
         if self.__count == self.__player_count:
             self.__tick()
 
     def schedule_move(self, player, direction):
+        print("Move by", player.index)
         self.__event_queue.append(["move", player, direction])
         self.__player_data[player]["turn"] = False
         self.__count += 1
@@ -60,6 +63,7 @@ class MapData:
             self.__tick()
 
     def schedule_bomb(self, player):
+        print("Bomb by", player.index)
         self.__player_data[player]["turn"] = False
         position = self.__player_data[player]["coordinate"]
         radius = self.__player_data[player]["bomb_size"]
@@ -109,8 +113,10 @@ class MapData:
 
         self.__current_round += 1
         print(self.__current_round)
+        self.round_complete = True
 
     def __next_round(self):
+        self.round_complete = False
         if self.__current_round == 301:
             self.over = True
             for player in self.__player_data:

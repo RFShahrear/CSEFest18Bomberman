@@ -214,9 +214,9 @@ def main():
 
     while not map_data.over:
         game.update_map(map_data._MapData__player_data)
-        time.sleep(0.1)
+        if map_data.round_complete:
+            map_data._MapData__next_round()
 
-        map_data._MapData__next_round()
     print(map_data._MapData__deduce_winner().name)
 
 
