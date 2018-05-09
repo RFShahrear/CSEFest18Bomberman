@@ -1,6 +1,7 @@
 import os
 import pygame
 import Player
+import Player1
 from threading import Thread
 import Processor
 import time
@@ -184,17 +185,17 @@ def start(player):
 
 
 def main():
-    map_data = Processor.MapData("map.txt", (15, 17), 4)
+    map_data = Processor.MapData("Round1Map1.txt", (15, 17), 4)
     game = Visualizer(map_data)
-    p1 = Player.Player(map_data, "P1")
+    p1 = Player1.Player(map_data, "P1")
     p2 = Player.Player(map_data, "P2")
     p3 = Player.Player(map_data, "P3")
     p4 = Player.Player(map_data, "P4")
 
-    map_data.add_player(p1)
-    map_data.add_player(p2)
-    map_data.add_player(p3)
-    map_data.add_player(p4)
+    map_data._MapData__add_player(p1)
+    map_data._MapData__add_player(p2)
+    map_data._MapData__add_player(p3)
+    map_data._MapData__add_player(p4)
 
     p1.index = 1
     p2.index = 2

@@ -32,7 +32,7 @@ class MapData:
                 if self.__coordinate_data[i][j] == "W":
                     self.__coordinate_data[i][j] += " ," + line[j]
 
-    def add_player(self, player):
+    def __add_player(self, player):
         if len(self.__player_data) == 0:
             self.__player_data[player] = {"coordinate": (1, 1), "bomb_size": 1, "turn": True, "bomb_count": 1, "index": 1, "name": player.name, "point": 0}
             self.__coordinate_data[1][1] = "P1"
@@ -95,10 +95,6 @@ class MapData:
                 self.__place_bomb(event[1], event[2], event[3])
         self.__event_queue.clear()
         while len(self.__bomb_data) > 0 and self.__bomb_data[0][0] == self.__current_round:
-            try:
-                self.__player_data[self.__bomb_data[0][3]]["bomb_count"] += 1
-            except KeyError:
-                pass
             self.__explode(self.__bomb_data.pop(0))
 
         self.__current_round += 1
@@ -116,6 +112,11 @@ class MapData:
                 player.reset = True
 
     def __explode(self, bomb):
+        try:
+            self.__player_data[bomb[3]]["bomb_count"] += 1
+        except KeyError:
+            pass
+
         if self.__coordinate_data[bomb[1][0]][bomb[1][1]][0] == "P":
             self.__coordinate_data[bomb[1][0]][bomb[1][1]] = "."
             bomb[3].over = True
