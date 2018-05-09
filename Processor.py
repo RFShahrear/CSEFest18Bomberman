@@ -87,6 +87,16 @@ class MapData:
     def get_self_data(self, player):
         return self.__player_data[player]
 
+    def get_all_bombs(self):
+        sending_data = []
+        for bomb in self.__bomb_data:
+            sending_data.append(dict())
+            sending_data[-1]["coordinate"] = bomb[1]
+            sending_data[-1]["radius"] = bomb[2]
+            sending_data[-1]["player_index"] = bomb[3].index
+            sending_data[-1]["time_till_detonation"] = bomb[0] - self.__current_round + 1
+        return sending_data
+
     def __tick(self):
         for event in self.__event_queue:
             if event[0] == "move":
